@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Rainbow Brain</string>
+    <string name="classic_mode">Classic mode</string>
+    <string name="time_mode">Time mode</string>
+</resources>
