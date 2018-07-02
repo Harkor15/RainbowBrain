@@ -3,4 +3,9 @@
     <string name="classic_mode">Classic mode</string>
     <string name="time_mode">Time mode</string>
     <string name="signin_other_error">Error!</string>
+    <string name="what_color">What color it is?</string>
+    <string name="blue">blue</string>
+    <string name="green">green</string>
+    <string name="red">red</string>
+    <string name="yellow">yellow</string>
 </resources>

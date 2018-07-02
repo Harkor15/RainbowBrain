@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mGoogleSignInClient = GoogleSignIn.getClient(this,
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
     @OnClick(R.id.image_classic)
     void classicClick(){
         Intent intent=new Intent(this,ClassicActivity.class);
@@ -113,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void startSignInIntent() {
         GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
                 GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
@@ -135,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
                         if (task.isSuccessful()) {
-                            // The signed in account is stored in the task's result.
                              signedInAccount = task.getResult();
                             GamesClient gamesClient = Games.getGamesClient(MainActivity.this, GoogleSignIn.getLastSignedInAccount(getApplicationContext()));
                             gamesClient.setViewForPopups(findViewById(R.id.gps_popup));
