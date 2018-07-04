@@ -3,16 +3,17 @@ package harkor.rainbowbrain;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.games.Games;
-
-import org.w3c.dom.Text;
+import com.google.android.gms.games.GamesClient;
 
 import java.util.Random;
 
@@ -31,8 +32,9 @@ public class ClassicActivity extends AppCompatActivity {
     private int text4;
     private int winColor;
     private int result;
-    private int time;
-    Random random=new Random();
+    private CountDownTimer cdTimer;
+    private int time=5000;
+    private Random random=new Random();
     @BindView(R.id.image_btn1)
     ImageView imageBtn1;
     @BindView(R.id.image_btn2)
@@ -55,7 +57,12 @@ public class ClassicActivity extends AppCompatActivity {
     TextView textResult;
     @BindView(R.id.progress_time)
     ProgressBar progressBar;
-
+    @BindView(R.id.text_game_over)
+    TextView textGameOver;
+    @BindView(R.id.text_back)
+    TextView textBack;
+    @BindView(R.id.image_back)
+    ImageView imageBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +70,20 @@ public class ClassicActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_classic);
+        setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
-
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         randomize();
         randomColor();
         randomText();
         textResult.setText("0");
         result=0;
-        time=5000;
        setTimer(time);
-    }
-    //@OnClick(R.id.image_color)
-    void percentTest(){
-        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .unlock(getString(R.string.achievement_first_game));
     }
     private void randomize(){
         col1=random.nextInt(4)+1;
@@ -170,7 +176,7 @@ public class ClassicActivity extends AppCompatActivity {
     private void setTimer(int finishTime){
         progressBar.setMax(finishTime);
         progressBar.setProgress(finishTime);
-        CountDownTimer cdTimer=new CountDownTimer(finishTime,100) {
+        cdTimer=new CountDownTimer(finishTime,100) {
             @Override
             public void onTick(long l) {
                 progressBar.setProgress(progressBar.getProgress()-100);
@@ -184,7 +190,18 @@ public class ClassicActivity extends AppCompatActivity {
         cdTimer.start();
     }
     private void lose(){
-        //TODO: WHEN LOSE!
+        imageBtn1.setVisibility(View.INVISIBLE);
+        imageBtn2.setVisibility(View.INVISIBLE);
+        imageBtn3.setVisibility(View.INVISIBLE);
+        imageBtn4.setVisibility(View.INVISIBLE);
+        textOp1.setVisibility(View.INVISIBLE);
+        textOp2.setVisibility(View.INVISIBLE);
+        textOp3.setVisibility(View.INVISIBLE);
+        textOp4.setVisibility(View.INVISIBLE);
+        textGameOver.setVisibility(View.VISIBLE);
+        imageBack.setVisibility(View.VISIBLE);
+        textBack.setVisibility(View.VISIBLE);
+        searchForAchievements();
     }
     @OnClick(R.id.image_btn1)
     void clickBtn1(){
@@ -203,6 +220,52 @@ public class ClassicActivity extends AppCompatActivity {
         clickButton(4);
     }
     private void clickButton(int idButton){
+        cdTimer.cancel();
+        int winButton;
+        switch (idButton){
+            case 1: winButton=text1; break;
+            case 2: winButton=text2; break;
+            case 3: winButton=text3; break;
+            case 4: winButton=text4; break;
+            default: winButton=0;
+        }
+        if(winButton==winColor){
+            randomColor();
+            randomText();
+            randomize();
+            result++;
+            textResult.setText(result+"");
+            time*=0.95;
+            setTimer(time);
+        }else{
+            lose();
+        }
+    }
+    private void searchForAchievements(){
+        try {
+            GamesClient gamesClient = Games.getGamesClient(ClassicActivity.this, GoogleSignIn.getLastSignedInAccount(getApplicationContext()));
+            gamesClient.setViewForPopups(findViewById(R.id.gps_popup2));
+            Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                    .submitScore(getString(R.string.leaderboard_classic_mode), result);
+            Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                    .increment(getString(R.string.achievement_classic__10_games), 1);
+            Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                    .unlock(getString(R.string.achievement_first_game));
+            if(result>10){
+                Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                        .unlock(getString(R.string.achievement_classic__10_points));
+            }
+            if(result>20){
+                Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                        .unlock(getString(R.string.achievement_classic__20_points));
+            }
+            if(result>30){
+                Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                        .unlock(getString(R.string.achievement_classic__30_points));
+            }
+        }catch (NullPointerException e){
+            Toast.makeText(getApplicationContext(),R.string.login_to_play,Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

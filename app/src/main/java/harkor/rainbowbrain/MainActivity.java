@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -19,6 +21,8 @@ import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -26,6 +30,16 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9876;
     private static final int RC_ACHIEVEMENT_UI = 9003;
     private static final int RC_LEADERBOARD_UI = 9004;
+    @BindView(R.id.image_logout)
+    ImageView imageLogout;
+    @BindView(R.id.image_login)
+    ImageView imageLogin;
+    @BindView(R.id.image_achiewements)
+    ImageView imageAchevements;
+    @BindView(R.id.image_leaderboard_classic)
+    ImageView imageLeaderboardClassic;
+    @BindView(R.id.image_leaderboard_time)
+    ImageView imageLeaderboardTime;
 
     private GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount signedInAccount;
@@ -40,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mGoogleSignInClient = GoogleSignIn.getClient(this,
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).build());
+        if(isSignedIn()){
+            buttonsWhenSignedIn();
+        }
     }
 
-    @OnClick(R.id.button_logout)
+    @OnClick(R.id.image_logout)
     void signOut() {
         GoogleSignInClient signInClient = GoogleSignIn.getClient(this,
                 GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
@@ -50,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        // at this point, the user is signed out.
+                        buttonsWhenSignedOut();
                     }
                 });
     }
@@ -59,26 +76,17 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(this,ClassicActivity.class);
         startActivity(intent);
     }
-    @OnClick(R.id.button_percentage)
-    void addPercent(){
-        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .increment(getString(R.string.achievement_100), 1);
-    }
     @OnClick(R.id.image_seconds)
-    void imageSeconds(){
-        if(isSignedIn()){
-            String name=signedInAccount.getDisplayName();
-            Toast.makeText(getApplicationContext(),name,Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getApplicationContext(),"FALSE",Toast.LENGTH_SHORT).show();
-        }
+    void imageTime(){
+        Intent intent=new Intent(this,TimeActivity.class);
+        startActivity(intent);
     }
-    @OnClick(R.id.button_login)
+    @OnClick(R.id.image_login)
     void onSignInButtonClicked() {
         startSignInIntent();
     }
-    @OnClick(R.id.button_achevements)
-     void showAchievements() {
+    @OnClick(R.id.image_achiewements)
+    void showAchievements() {
         if (isSignedIn()){
             Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                     .getAchievementsIntent()
@@ -90,17 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     });
         }
     }
-    @OnClick(R.id.button_firstgame)
-    void firstGame(){
-        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .unlock(getString(R.string.achievement_first_game));
-    }
-    @OnClick(R.id.button_addresult)
-    void addresult(){
-        Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .submitScore(getString(R.string.leaderboard_classic_mode), 1);
-    }
-    @OnClick(R.id.button_clasictable)
+    @OnClick(R.id.image_leaderboard_classic)
     void showLeaderboard() {
         Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                 .getLeaderboardIntent(getString(R.string.leaderboard_classic_mode))
@@ -135,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                              signedInAccount = task.getResult();
                             GamesClient gamesClient = Games.getGamesClient(MainActivity.this, GoogleSignIn.getLastSignedInAccount(getApplicationContext()));
                             gamesClient.setViewForPopups(findViewById(R.id.gps_popup));
+                            buttonsWhenSignedIn();
                         } else {
                             // Player will need to sign-in explicitly using via UI
                         }
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 signedInAccount = result.getSignInAccount();
                 GamesClient gamesClient = Games.getGamesClient(MainActivity.this, GoogleSignIn.getLastSignedInAccount(getApplicationContext()));
                 gamesClient.setViewForPopups(findViewById(R.id.gps_popup));
+                buttonsWhenSignedIn();
             } else {
                 String message = result.getStatus().getStatusMessage();
                 if (message == null || message.isEmpty()) {
@@ -165,5 +165,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         signInSilently();
+    }
+    private void buttonsWhenSignedOut(){
+        imageLogin.setVisibility(View.VISIBLE);
+        imageLogout.setVisibility(View.INVISIBLE);
+        imageAchevements.setVisibility(View.INVISIBLE);
+        imageLeaderboardClassic.setVisibility(View.INVISIBLE);
+        imageLeaderboardTime.setVisibility(View.INVISIBLE);
+    }
+    private void buttonsWhenSignedIn(){
+        imageLogin.setVisibility(View.INVISIBLE);
+        imageLogout.setVisibility(View.VISIBLE);
+        imageAchevements.setVisibility(View.VISIBLE);
+        imageLeaderboardClassic.setVisibility(View.VISIBLE);
+        imageLeaderboardTime.setVisibility(View.VISIBLE);
     }
 }
