@@ -11,4 +11,5 @@
     <string name="game_over">GAME OVER!</string>
     <string name="back_to_menu">Back to menu</string>
     <string name="login_to_play">Sign in to Google Games!</string>
+    <string name="finish">FINISH!</string>
 </resources>

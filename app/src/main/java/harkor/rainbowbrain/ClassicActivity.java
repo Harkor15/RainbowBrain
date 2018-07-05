@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesClient;
 
@@ -85,6 +86,7 @@ public class ClassicActivity extends AppCompatActivity {
         result=0;
        setTimer(time);
     }
+
     private void randomize(){
         col1=random.nextInt(4)+1;
         col2=random.nextInt(4)+1;
@@ -250,18 +252,24 @@ public class ClassicActivity extends AppCompatActivity {
             Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                     .increment(getString(R.string.achievement_classic__10_games), 1);
             Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                    .unlock(getString(R.string.achievement_first_game));
-            if(result>10){
+                    .increment(getString(R.string.achievement_100_games), 1);
+            Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                    .unlock(getString(R.string.achievement_first_classic_game));
+            if(result>=10){
                 Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .unlock(getString(R.string.achievement_classic__10_points));
-            }
-            if(result>20){
-                Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                        .unlock(getString(R.string.achievement_classic__20_points));
-            }
-            if(result>30){
-                Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                        .unlock(getString(R.string.achievement_classic__30_points));
+                if(result>=20){
+                    Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                            .unlock(getString(R.string.achievement_classic__20_points));
+                    if(result>=25){
+                        Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                                .unlock(getString(R.string.achievement_classic__25_points));
+                        if(result>=30){
+                            Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                                    .unlock(getString(R.string.achievement_classic__30_points));
+                        }
+                    }
+                }
             }
         }catch (NullPointerException e){
             Toast.makeText(getApplicationContext(),R.string.login_to_play,Toast.LENGTH_SHORT).show();

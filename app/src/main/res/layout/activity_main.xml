@@ -43,7 +43,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_classic" />
+        app:layout_constraintTop_toBottomOf="@+id/image_classic"
+        app:srcCompat="@drawable/button2" />
 
     <TextView
         android:id="@+id/text_seconds"
@@ -57,7 +58,7 @@
         android:layout_marginTop="12dp"
         android:text="@string/time_mode"
         android:textColor="@android:color/background_light"
-        android:textSize="18sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_seconds"
         app:layout_constraintEnd_toEndOf="@+id/image_seconds"
         app:layout_constraintStart_toStartOf="@+id/image_seconds"
@@ -71,13 +72,14 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/button2"
         app:layout_constraintDimensionRatio="5:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_logo" />
+        app:layout_constraintTop_toBottomOf="@+id/image_logo"
+        app:srcCompat="@drawable/button2" />
 
     <TextView
         android:id="@+id/text_classic"
@@ -91,7 +93,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/classic_mode"
         android:textColor="@android:color/background_light"
-        android:textSize="18sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_classic"
         app:layout_constraintEnd_toEndOf="@+id/image_classic"
         app:layout_constraintStart_toStartOf="@+id/image_classic"
