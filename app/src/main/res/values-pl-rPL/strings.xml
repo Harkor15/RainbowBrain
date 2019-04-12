@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tęcza mózgu</string>
+    <string name="classic_mode">Tryb klasyczny</string>
+    <string name="time_mode">"Sprint "</string>
+    <string name="signin_other_error">Błąd logowania!</string>
+    <string name="what_color">Jaki to kolor?</string>
+    <string name="blue">niebieski</string>
+    <string name="green">zielony</string>
+    <string name="red">czerwony</string>
+    <string name="yellow">zółty</string>
+    <string name="game_over">KONIEC GRY!</string>
+    <string name="back_to_menu">Wróc do menu</string>
+    <string name="login_to_play">Zaloguj się go Google Games!</string>
+    <string name="finish">KONIEC!</string>
+    <string name="privacy_policy">polityka prywatności</string>
+</resources>

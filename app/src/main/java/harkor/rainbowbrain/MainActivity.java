@@ -1,6 +1,7 @@
 package harkor.rainbowbrain;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +40,12 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageLeaderboardClassic;
     @BindView(R.id.image_leaderboard_time)
     ImageView imageLeaderboardTime;
-
+    @OnClick(R.id.privacy_policy)
+    void showPrivacyPolicy(){
+        Intent intent=new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://www.freeprivacypolicy.com/privacy/view/67273a3d4147a41cdc8d5bab4502c4d3"));
+        startActivity(intent);
+    }
     private GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount signedInAccount;
 
